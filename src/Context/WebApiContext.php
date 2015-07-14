@@ -26,29 +26,29 @@ class WebApiContext implements ApiClientAwareContext
     /**
      * @var string
      */
-    private $authorization;
+    protected $authorization;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    protected $client;
 
     /**
      * @var array
      */
-    private $headers = array();
+    protected $headers = array();
 
     /**
      * @var \GuzzleHttp\Message\RequestInterface
      */
-    private $request;
+    protected $request;
 
     /**
      * @var \GuzzleHttp\Message\ResponseInterface
      */
-    private $response;
+    protected $response;
 
-    private $placeHolders = array();
+    protected $placeHolders = array();
 
     /**
      * {@inheritdoc}
@@ -124,7 +124,7 @@ class WebApiContext implements ApiClientAwareContext
         }
 
         $bodyOption = array(
-          'body' => json_encode($fields),
+                'body' => json_encode($fields),
         );
         $this->request = $this->getClient()->createRequest($method, $url, $bodyOption);
         if (!empty($this->headers)) {
@@ -149,12 +149,12 @@ class WebApiContext implements ApiClientAwareContext
         $string = $this->replacePlaceHolder(trim($string));
 
         $this->request = $this->getClient()->createRequest(
-            $method,
-            $url,
-            array(
-                'headers' => $this->getHeaders(),
-                'body' => $string,
-            )
+                $method,
+                $url,
+                array(
+                        'headers' => $this->getHeaders(),
+                        'body' => $string,
+                )
         );
         $this->sendRequest();
     }
@@ -245,7 +245,7 @@ class WebApiContext implements ApiClientAwareContext
 
         if (null === $etalon) {
             throw new \RuntimeException(
-              "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
+                    "Can not convert etalon to json:\n" . $this->replacePlaceHolder($jsonString->getRaw())
             );
         }
 
@@ -267,11 +267,11 @@ class WebApiContext implements ApiClientAwareContext
         $response = $this->response;
 
         echo sprintf(
-            "%s %s => %d:\n%s",
-            $request->getMethod(),
-            $request->getUrl(),
-            $response->getStatusCode(),
-            $response->getBody()
+                "%s %s => %d:\n%s",
+                $request->getMethod(),
+                $request->getUrl(),
+                $response->getStatusCode(),
+                $response->getBody()
         );
     }
 
@@ -282,7 +282,7 @@ class WebApiContext implements ApiClientAwareContext
      *
      * @return string
      */
-    private function prepareUrl($url)
+    protected function prepareUrl($url)
     {
         return ltrim($this->replacePlaceHolder($url), '/');
     }
@@ -358,7 +358,7 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    private function sendRequest()
+    protected function sendRequest()
     {
         try {
             $this->response = $this->getClient()->send($this->request);
@@ -371,7 +371,7 @@ class WebApiContext implements ApiClientAwareContext
         }
     }
 
-    private function getClient()
+    protected function getClient()
     {
         if (null === $this->client) {
             throw new \RuntimeException('Client has not been set in WebApiContext');
